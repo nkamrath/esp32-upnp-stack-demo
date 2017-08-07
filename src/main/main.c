@@ -16,11 +16,12 @@
 #include "lwip/dns.h"
 
 #include "network/update_manager/update_manager.h"
+#include "network/upnp_stack/ssdp.h"
+#include "upnp_stack.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#define BLINK_GPIO 34
 #define EXAMPLE_WIFI_SSID "NETGEAR"
 #define EXAMPLE_WIFI_PASS "swim like a beast"
 
@@ -87,8 +88,7 @@ void app_init(void *pvParameter)
     ESP_LOGI(TAG, "Connected to AP");
 
     UpdateManager_Create(NULL);
-
-    uint8_t loopCounter = 0;
+    UpnpStack_Create();
 
     printf("\r\nNEW FIRMWARE 5!!!!!!!!!!!!\r\n");
     while(1)
@@ -100,12 +100,7 @@ void app_init(void *pvParameter)
 
 void app_main(void)
 {
-
     nvs_flash_init();
-
-    //setup blink pin
-    gpio_pad_select_gpio(BLINK_GPIO);
-    gpio_set_direction(BLINK_GPIO, GPIO_MODE_OUTPUT);
 
     xTaskCreate(&app_init, "app_init", 4096, NULL, 5, NULL);
 
